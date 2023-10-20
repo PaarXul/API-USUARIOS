@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.UUID;
+
 
 @Setter
 @Getter
@@ -22,14 +22,12 @@ public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
+    private String id;
     private String nombre;
 
     @Column(unique = true)
     private String correo;
-
-    private String contraseña;
+    private String contrasena;
 
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
@@ -44,7 +42,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.contraseña;
+        return this.contrasena;
     }
 
     @Override

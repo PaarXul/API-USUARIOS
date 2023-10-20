@@ -15,7 +15,7 @@ public class Telefonos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Long id;
 
     private String numero;
     private String codigoCiudad;
