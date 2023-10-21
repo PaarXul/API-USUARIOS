@@ -1,6 +1,5 @@
 package com.nttdata.usuariosapi.config.jwt;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

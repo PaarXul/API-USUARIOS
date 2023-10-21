@@ -1,5 +1,6 @@
 package com.nttdata.usuariosapi.service.impl;
 
+
 import com.nttdata.usuariosapi.model.Usuario;
 import com.nttdata.usuariosapi.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
-        Usuario usuario = this.usuarioRepository.findByCorreo(correo);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Usuario usuario = this.usuarioRepository.findByUsername(username);
         if(usuario == null){
             throw new UsernameNotFoundException("Usuario no encontrado");
         }

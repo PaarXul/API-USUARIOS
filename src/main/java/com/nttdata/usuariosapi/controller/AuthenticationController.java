@@ -1,6 +1,5 @@
 package com.nttdata.usuariosapi.controller;
 
-
 import com.nttdata.usuariosapi.config.jwt.JwtRequest;
 import com.nttdata.usuariosapi.config.jwt.JwtResponse;
 import com.nttdata.usuariosapi.config.jwt.JwtUtil;
@@ -56,7 +55,6 @@ public class AuthenticationController {
         }catch (BadCredentialsException badCredentialsException){
             throw new Exception("INVALID_CREDENTIALS: "+ badCredentialsException.getMessage());
         }
-
     }
 
     @GetMapping("/actual-usuario")

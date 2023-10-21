@@ -1,11 +1,11 @@
 package com.nttdata.usuariosapi.controller;
 
 
+import com.nttdata.usuariosapi.exceptions.CustomException;
 import com.nttdata.usuariosapi.model.Usuario;
 import com.nttdata.usuariosapi.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -17,18 +17,16 @@ import java.util.UUID;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UsuarioController(UsuarioService usuarioService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
 
+
     @PostMapping("/")
-    public ResponseEntity<Usuario> guardarUsuario(@RequestBody Usuario usuario) throws Exception {
-        usuario.setContrasena(this.bCryptPasswordEncoder.encode(usuario.getPassword()));
+    public ResponseEntity<Usuario> guardarUsuario(@RequestBody Usuario usuario) throws Exception, CustomException {
         return ResponseEntity.ok(usuarioService.guardarUsuario(usuario));
     }
 
@@ -46,6 +44,11 @@ public class UsuarioController {
     @GetMapping("/todos/")
     public ResponseEntity<Set<Usuario>> obtenerUsuarios() {
         return ResponseEntity.ok(usuarioService.obtenerUsuarios());
+    }
+
+    @PatchMapping("/{usuarioId}")
+    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable("usuarioId") String usuarioId, @RequestBody Usuario usuario) throws CustomException, Exception {
+        return ResponseEntity.ok(usuarioService.actualizarUsuario(usuario, usuarioId));
     }
 
 }

@@ -21,12 +21,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
 
 @EnableWebSecurity
 @Configuration
 @EnableMethodSecurity(prePostEnabled = true)
-public class MySecurityConfig{
+public class MySecurityConfig {
 
     private final JwtAuthenticationEntryPoint unauthorizedHandler;
     private final JwtFilter jwtFilter;
@@ -39,19 +38,23 @@ public class MySecurityConfig{
         this.userDetailsServiceImpl = userDetailsServiceImpl;
     }
 
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/generate-token", "/usuarios/").permitAll()
+                        auth.requestMatchers("/generate-token", "/usuarios/"
+                                ,"swagger-ui.html","/swagger-ui/**","/swagger-resources/**","/v3/api-docs/**"
+                                ,"/webjars/**","/swagger-ui-custom.html","/swagger-resources"
+                                ,"/swagger-resources/**", "/configuration/ui", "/configuration/security"
+                                ,"/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**"
+
+                ).permitAll()
 
                                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
                                 .anyRequest().authenticated())
@@ -59,12 +62,10 @@ public class MySecurityConfig{
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider())
+
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
-
-
-
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
@@ -78,6 +79,4 @@ public class MySecurityConfig{
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
-
-
 }

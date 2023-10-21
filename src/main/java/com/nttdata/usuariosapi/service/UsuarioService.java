@@ -4,11 +4,10 @@ import com.nttdata.usuariosapi.exceptions.CustomException;
 import com.nttdata.usuariosapi.model.Usuario;
 
 import java.util.Set;
-import java.util.UUID;
 
 public interface UsuarioService {
 
-    Usuario guardarUsuario(Usuario usuario) throws Exception;
+    Usuario guardarUsuario(Usuario usuario) throws Exception, CustomException;
 
     Usuario obtenerUsuario(String usuarioId);
 
