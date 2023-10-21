@@ -1,6 +1,7 @@
 package com.nttdata.usuariosapi.controller;
 
-
+import com.nttdata.usuariosapi.dto.UsuarioDto;
+import com.nttdata.usuariosapi.dto.UsuarioResponseDto;
 import com.nttdata.usuariosapi.exceptions.CustomException;
 import com.nttdata.usuariosapi.model.Usuario;
 import com.nttdata.usuariosapi.service.UsuarioService;
@@ -23,15 +24,13 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-
-
     @PostMapping("/")
-    public ResponseEntity<Usuario> guardarUsuario(@RequestBody Usuario usuario) throws Exception, CustomException {
+    public ResponseEntity<UsuarioResponseDto> guardarUsuario(@RequestBody UsuarioDto usuario) throws Exception, CustomException {
         return ResponseEntity.ok(usuarioService.guardarUsuario(usuario));
     }
 
     @GetMapping("/{usuarioId}")
-    public ResponseEntity<Usuario> obtenerUsuario(@PathVariable("usuarioId") String usuarioId) {
+    public ResponseEntity<Usuario> obtenerUsuario(@PathVariable("usuarioId") String usuarioId) throws CustomException {
         return ResponseEntity.ok(usuarioService.obtenerUsuario(usuarioId));
     }
 
@@ -43,11 +42,13 @@ public class UsuarioController {
 
     @GetMapping("/todos/")
     public ResponseEntity<Set<Usuario>> obtenerUsuarios() {
+
+
         return ResponseEntity.ok(usuarioService.obtenerUsuarios());
     }
 
     @PatchMapping("/{usuarioId}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable("usuarioId") String usuarioId, @RequestBody Usuario usuario) throws CustomException, Exception {
+    public ResponseEntity<UsuarioResponseDto> actualizarUsuario(@PathVariable("usuarioId") String usuarioId, @RequestBody UsuarioDto usuario) throws CustomException, Exception {
         return ResponseEntity.ok(usuarioService.actualizarUsuario(usuario, usuarioId));
     }
 

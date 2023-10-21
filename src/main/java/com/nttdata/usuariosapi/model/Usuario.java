@@ -2,23 +2,14 @@ package com.nttdata.usuariosapi.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.nttdata.usuariosapi.config.jwt.Authority;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.Date;
 import java.util.Set;
-
 
 @Setter
 @Getter
@@ -26,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "usuarios")
-public class Usuario  implements UserDetails {
+public class Usuario  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -36,42 +27,29 @@ public class Usuario  implements UserDetails {
     @Column(unique = true)
     private String correo;
     private String contrasena;
-
-    private String username;
-    private String password;
-
     private boolean enabled = true;
 
-    @Getter
-    @OneToMany(mappedBy = "usuario",fetch = FetchType.EAGER)
-    @JsonIgnore
+    private String token;
+
+    private Date creado;
+    private Date modificado;
+    private Date ultimoLogin;
+
+
+    @OneToMany(mappedBy = "usuario",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JsonManagedReference
     @Fetch(FetchMode.JOIN)
     private Set<Telefonos> telefonos;
 
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    @PrePersist
+    protected void onCreate() {
+        creado = new Date();
+        modificado = creado;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
+    @PreUpdate
+    protected void onUpdate() {
+        modificado = new Date();
     }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<Authority> autoridades = new HashSet<>();
-
-            autoridades.add(new Authority("NORMAL"));
-        return autoridades;
-    }
-
-
 
 }

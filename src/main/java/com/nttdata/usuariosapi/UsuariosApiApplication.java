@@ -1,5 +1,6 @@
 package com.nttdata.usuariosapi;
 
+import com.nttdata.usuariosapi.dto.UsuarioDto;
 import com.nttdata.usuariosapi.exceptions.CustomException;
 import com.nttdata.usuariosapi.exceptions.UsuarioFoundException;
 import com.nttdata.usuariosapi.model.Telefonos;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,10 +20,6 @@ public class UsuariosApiApplication implements CommandLineRunner {
       // Insercion de usuarios
            @Autowired
            private UsuarioService usuarioService;
-
-		   @Autowired
-           private BCryptPasswordEncoder bCryptPasswordEncoder;
-
 
 	public static void main(String[] args) {
 		SpringApplication.run(UsuariosApiApplication.class, args);
@@ -36,11 +32,11 @@ public class UsuariosApiApplication implements CommandLineRunner {
 
 //Insercion de Usuarios
         try {
-            Usuario usuario = new Usuario();
+            UsuarioDto usuario = new UsuarioDto();
 
-            usuario.setUsername("admin");
+            usuario.setNombre("admin");
 			usuario.setCorreo("admin@gmail.com");
-            usuario.setPassword(bCryptPasswordEncoder.encode("12345"));
+            usuario.setContrasena("12345.@dwqe21245532K1123");
 
 			Telefonos telefonos = new Telefonos();
 			telefonos.setNumero("12345678");
@@ -52,10 +48,10 @@ public class UsuariosApiApplication implements CommandLineRunner {
 
 			usuario.setTelefonos(telefonosSet);
 
-            Usuario usuario2 = new Usuario();
-            usuario2.setUsername("Normal");
+            UsuarioDto usuario2 = new UsuarioDto();
+            usuario2.setNombre("Normal");
 			usuario2.setCorreo("normal@gmail.com");
-			usuario2.setPassword(bCryptPasswordEncoder.encode("12345"));
+			usuario2.setContrasena("12345.@dwqe21245532K1123");
 
 			Telefonos telefonos2 = new Telefonos();
 			telefonos2.setNumero("12345678");
@@ -67,9 +63,9 @@ public class UsuariosApiApplication implements CommandLineRunner {
 
 			usuario2.setTelefonos(telefonosSet2);
 
-			Usuario usuarioGuardado = usuarioService.guardarUsuario(usuario);
+			usuarioService.guardarUsuario(usuario);
 
-            Usuario usuarioGuardados = usuarioService.guardarUsuario(usuario2);
+            usuarioService.guardarUsuario(usuario2);
 
         } catch (UsuarioFoundException exception) {
             exception.printStackTrace();

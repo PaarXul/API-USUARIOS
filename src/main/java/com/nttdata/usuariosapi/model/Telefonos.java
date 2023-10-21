@@ -1,6 +1,7 @@
 package com.nttdata.usuariosapi.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,6 @@ public class Telefonos {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")
+    @JsonBackReference
     private Usuario usuario;
-
-
 }
