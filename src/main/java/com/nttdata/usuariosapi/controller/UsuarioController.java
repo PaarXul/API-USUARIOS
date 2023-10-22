@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -46,7 +45,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.obtenerUsuarios());
     }
 
-    @PatchMapping("/{usuarioId}")
+    @PutMapping("/{usuarioId}")
     public ResponseEntity<UsuarioResponseDto> actualizarUsuario(@PathVariable("usuarioId") String usuarioId, @RequestBody UsuarioDto usuario) throws CustomException, Exception {
         return ResponseEntity.ok(usuarioService.actualizarUsuario(usuario, usuarioId));
     }
