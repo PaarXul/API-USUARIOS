@@ -16,16 +16,13 @@ Evaluacion de conocimientos en Spring Boot y Java.
 
 ## Funciones de la API
 
-- **Crear Usuario - POST**.
-- **Eliminar Usuario - DELETE**.
-- **Actualizar Usuario - UPDATE**.
-- **Obtener Todos Los Usuarios - GET**.
-- **Obtener usuario por ID - GET**.
-- **Implementacion de SWAGGER**.
-- **Implementacion de JWT**.
-- **Implementacion de HSQLDB**.
-- **Implementacion de Lombok**.
-- **Implementacion de JPA - Hibernate**.
+- **Crear Usuario - POST** - `http://localhost:8081/usuarios/`.
+- **Eliminar Usuario - DELETE** - `http://localhost:8081/usuarios/${{ID}}`.
+- **Actualizar Usuario - UPDATE** `http://localhost:8081/usuarios/${{ID}}`.
+- **Obtener Todos Los Usuarios - GET** `http://localhost:8081/usuarios/todos/`.
+- **Obtener usuario por ID - GET** `http://localhost:8081/usuarios/${{ID}}`.
+
+Tambien se puede usar el archivo  [`Usuario.postman_collection.json`](/src/main/resources/Usuario.postman_collection.json) para importar las peticiones a Postman.
 
 ## Estructura del Proyecto
 
