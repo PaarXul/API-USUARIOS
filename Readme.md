@@ -22,7 +22,7 @@ Evaluacion de conocimientos en Spring Boot y Java.
 - **Obtener Todos Los Usuarios - GET** `http://localhost:8081/usuarios/todos/`.
 - **Obtener usuario por ID - GET** `http://localhost:8081/usuarios/${{ID}}`.
 
-Tambien se puede usar el archivo  [`Usuario.postman_collection.json`](/src/main/resources/Usuario.postman_collection.json) para importar las peticiones a Postman.
+Tambien se puede usar el archivo  [`Usuario.postman_collection.json`](https://github.com/PaarXul/API-USUARIOS/blob/main/src/main/resources/Usuario.postman_collection.json) para importar las peticiones a Postman.
 
 ## Estructura del Proyecto
 
@@ -37,6 +37,10 @@ Tambien se puede usar el archivo  [`Usuario.postman_collection.json`](/src/main/
 - **src/main/resources:** Contiene el archivo `application.properties`, el cual es el encargado de configurar la aplicación.
 - **pom.xml:** Contiene las dependencias del proyecto.
 - **README.md:** Contiene la información del proyecto.
+
+
+## Diagrama de Solución
+![Diagrama de Solucion](src/main/resources/DiagramaSolucion.png)
 
 
 ## Métodos
