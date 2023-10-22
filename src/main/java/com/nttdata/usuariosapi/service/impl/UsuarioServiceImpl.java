@@ -1,5 +1,6 @@
 package com.nttdata.usuariosapi.service.impl;
 
+import com.nttdata.usuariosapi.config.jwt.JwtUtil;
 import com.nttdata.usuariosapi.dto.UsuarioDto;
 import com.nttdata.usuariosapi.dto.UsuarioResponseDto;
 import com.nttdata.usuariosapi.exceptions.CustomException;
@@ -15,9 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.PatternMatchUtils;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,12 +32,14 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Value("${security.password}")
     private String passwordRegex;
     private final UsuarioRepository usuarioRepository;
+    private final JwtUtil jwtUtil;
     private final TelefonosRepository telefonosRepository;
     Logger logger = Logger.getLogger(UsuarioServiceImpl.class.getName());
 
     @Autowired
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, TelefonosRepository telefonosRepository) {
+    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, JwtUtil jwtUtil, TelefonosRepository telefonosRepository) {
         this.usuarioRepository = usuarioRepository;
+        this.jwtUtil = jwtUtil;
         this.telefonosRepository = telefonosRepository;
     }
 
@@ -66,6 +69,10 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new CustomException("El Correo ya esta registrado");
         } else {
 
+            String tokenAutentication = jwtUtil.generateToken(usuarioEnviado);
+
+            usuarioEnviado.setToken(tokenAutentication);
+
             usuarioAlmacenado = usuarioRepository.save(usuarioEnviado);
 
             // se crea la lista de telefonos
@@ -89,7 +96,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioResponseDto.setCreado(usuarioAlmacenado.getCreado());
         usuarioResponseDto.setModificado(usuarioAlmacenado.getModificado());
         usuarioResponseDto.setUltimoLogin(usuarioAlmacenado.getUltimoLogin());
-        usuarioResponseDto.setToken(usuarioResponseDto.getToken());
+        usuarioResponseDto.setToken(usuarioAlmacenado.getToken());
         usuarioResponseDto.setActivo(usuarioAlmacenado.isEnabled());
 
         return usuarioResponseDto;
@@ -98,6 +105,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public Usuario obtenerUsuario(String usuarioId) throws CustomException {
 
+
         if (usuarioId == null) {
             throw new CustomException("El id del usuario no puede ser nulo");
         }
@@ -105,8 +113,16 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void eliminarUsuario(String usuarioId) {
-        usuarioRepository.deleteById(usuarioId);
+    public void eliminarUsuario(String usuarioId) throws CustomException {
+        boolean usuarioLocal = usuarioRepository.existsById(usuarioId);
+
+        if (!usuarioLocal) {
+            throw new CustomException("El usuario no existe");
+        }else {
+            usuarioRepository.deleteById(usuarioId);
+            throw new CustomException("usuario eliminado correctamente");
+        }
+
     }
 
     @Override
@@ -117,27 +133,26 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public UsuarioResponseDto actualizarUsuario(UsuarioDto usuario, String usuarioId) throws CustomException, UsuarioFoundException {
         Usuario usuarioLocal = usuarioRepository.findById(usuarioId).orElseThrow(() -> new CustomException("El usuario no existe"));
-        Usuario usuarioEnviado = new Usuario();
         Usuario usuarioAlmacenado;
 
-
-
         // se setean los valores del usuario enviado al usuario que se va a almacenar
-        usuarioEnviado.setNombre(usuario.getNombre());
-        usuarioEnviado.setCorreo(usuario.getCorreo());
-        usuarioEnviado.setContrasena(usuario.getContrasena());
+        usuarioLocal.setNombre(usuario.getNombre());
+        usuarioLocal.setCorreo(usuario.getCorreo());
+        usuarioLocal.setContrasena(usuario.getContrasena());
+        usuarioLocal.setUltimoLogin(new Date());
 
-        if (!validarContrasena(usuarioEnviado.getContrasena())) {
+        if (!validarContrasena(usuarioLocal.getContrasena())) {
             throw new CustomException("La contraseña no es segura");
         }
 
 
-        if (validarCorreoElectronico(usuarioEnviado.getCorreo())) {
+        if (validarCorreoElectronico(usuarioLocal.getCorreo())) {
             throw new CustomException("El correo no es valido");
         }
 
-        if (usuarioLocal.getCorreo().equals(usuarioEnviado.getCorreo())) {
-            usuarioAlmacenado = usuarioRepository.save(usuarioEnviado);
+        if (usuarioLocal.getCorreo().equals(usuario.getCorreo())) {
+            //Validar si el correo es el mismo que teni el usuario si es asi no se comprueba si existe en otro usuario
+            usuarioAlmacenado = usuarioRepository.save(usuarioLocal);
 
             // se crea la lista de telefonos
             Set<Telefonos> telefono = new HashSet<>();
@@ -156,11 +171,12 @@ public class UsuarioServiceImpl implements UsuarioService {
             }
 
         } else {
-            usuarioLocal = usuarioRepository.findByCorreo(usuarioEnviado.getCorreo());
+            usuarioLocal = usuarioRepository.findByCorreo(usuarioLocal.getCorreo());
+            //si el usuario cambia el correo se comprueba si el correo existe en otro usuario
             if (usuarioLocal != null) {
                 throw new CustomException("El Correo ya esta registrado");
             } else {
-                usuarioAlmacenado = usuarioRepository.save(usuarioEnviado);
+                usuarioAlmacenado = usuarioRepository.save(usuarioLocal);
 
                 // se crea la lista de telefonos
                 Set<Telefonos> telefono = new HashSet<>();

@@ -13,7 +13,7 @@ public interface UsuarioService {
 
     Usuario obtenerUsuario(String usuarioId) throws CustomException;
 
-    void eliminarUsuario(String usuarioId);
+    void eliminarUsuario(String usuarioId) throws CustomException;
 
     //listar todos los usuarios
     Set<Usuario> obtenerUsuarios();

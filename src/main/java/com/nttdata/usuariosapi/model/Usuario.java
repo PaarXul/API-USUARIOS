@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.SQLUpdate;
 
 import java.util.Date;
 import java.util.Set;
@@ -51,5 +52,6 @@ public class Usuario  {
     protected void onUpdate() {
         modificado = new Date();
     }
+
 
 }

@@ -35,15 +35,14 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{usuarioId}")
-    public ResponseEntity<?> eliminarUsuario(@PathVariable("usuarioId") String usuarioId) {
+    public void eliminarUsuario(@PathVariable("usuarioId") String usuarioId) throws CustomException {
         usuarioService.eliminarUsuario(usuarioId);
-        return ResponseEntity.ok().build();
+        new CustomException("Usuario eliminado correctamente: "+usuarioId);
+
     }
 
     @GetMapping("/todos/")
     public ResponseEntity<Set<Usuario>> obtenerUsuarios() {
-
-
         return ResponseEntity.ok(usuarioService.obtenerUsuarios());
     }
 
